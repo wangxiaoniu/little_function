@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="大王" content="yanggseo@foxmail.com" />
+    <title>购物车</title>
+    <style>
+
+        *{
+            padding:0;
+            margin:0;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        ul{
+            list-style: none;
+        }
+        em{
+            font-style: normal;
+        }
+        .con{
+            width: 498px;
+            height: auto;
+            margin:10px auto;
+            border:1px solid #c9c9c9;
+        }
+        .product_info{
+            height:auto;
+            padding:0 10px 10px 10px;
+        }
+        .count_info{
+            height: 79px;
+            line-height: 80px;
+            font-size: 20px;
+            border-top:1px solid #c9c9c9;
+            text-indent: 20px;
+            position:relative;
+        }
+        .product_info li{
+            height: 198px;
+            width:478px;
+            border:1px solid #c9c9c9;
+            margin-top: 10px;
+            border-radius: 6px;
+            position: relative;
+        }
+        .product_select{
+            width: 478px;
+            border:1px solid #c9c9c9;
+            height: 50px;
+            position: absolute;
+            bottom:0;
+            left:0;
+            font-size: 0;
+        }
+        .product_btn{
+            width: 119px;
+            height: 50px;
+            zoom:1;
+            font-size: 14px;
+            cursor: pointer;
+            border:1px solid #c9c9c9;
+            background: #fff;
+        }
+
+        p{
+            margin-top: 30px;
+            color: #8b0000;
+        }
+        p input{
+            height: 30px;
+            width: 30px;
+            color: #8b0000;
+        }
+        input[type=radio]{
+            vertical-align: middle;
+        }
+        .price{
+
+        }
+        .active{
+            border-color: dodgerblue;
+        }
+        #priceCount{
+            width: 50px;
+            height: 50px;
+            border:0;
+            position: absolute;
+            right:10px;
+            top: 40px;
+            margin-top: -25px;
+            background: darkred;
+            color:#fff;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="con">
+        <div class="product_info">
+            <ul id="list">
+                <li>
+                    01
+                    <p>
+                        <input type="radio" name="pro_name" >
+                        <span class="price">1159元</span>
+                        <input type="button" value="-">
+                        <em>1</em>
+                        <input type="button" value="+">
+                    </p>
+                    <div class="product_select">
+                        <input type="button" class="product_btn active" value="1个月">
+                        <input type="button" class="product_btn" value="2个月">
+                        <input type="button" class="product_btn" value="3个月">
+                        <input type="button" class="product_btn" value="4个月">
+
+                    </div>
+                </li>
+                <li>
+                    02
+                    <p>
+                        <input type="radio" name="pro_name">
+                        <span class="price">1159元</span>
+                        <input type="button" value="-">
+                        <em>1</em>
+                        <input type="button" value="+">
+                    </p>
+                    <div class="product_select">
+                        <input type="button" class="product_btn" value="1个月">
+                        <input type="button" class="product_btn" value="2个月">
+                        <input type="button" class="product_btn" value="3个月">
+                        <input type="button" class="product_btn last" value="4个月">
+
+                    </div>
+                </li>
+
+
+            </ul>
+        </div>
+        <div class="count_info">
+            总计：￥<span id="myCount">0.00元</span>
+            <input type="button" id="priceCount" value="结算">
+        </div>
+    </div>
+
+
+    <script>
+        var oUl = document.getElementById('list');
+        var aLi = oUl.getElementsByTagName('li');
+        var Ocount=document.getElementById('myCount');
+        var arrPrice=[1159,2222,3333,4444];
+        var arrRadio=document.getElementsByName('pro_name');
+        var bigBtn=document.getElementById('priceCount');
+        var bigPric;
+        var bigOem;
+        for(var i=0;i<aLi.length;i++){
+            fnCount(aLi[i]);
+        }
+
+        function fnCount ( li ) {
+
+            var Oem=li.getElementsByTagName('em')[0];
+            var arrBtn=li.getElementsByTagName('input');
+            var Oprice=li.getElementsByClassName('price')[0];
+            var Oselect=li.getElementsByClassName('product_select')[0];
+            var select_btn=Oselect.getElementsByTagName('input');
+            var defCount=Oem.innerHTML;
+            //产品数量增加按钮
+            arrBtn[2].onclick=function(){
+                defCount++;
+                Oem.innerHTML=defCount;
+                lastCount();
+            };
+            //产品数量减少按钮
+            arrBtn[1].onclick=function(){
+
+                if(defCount == 1){
+                    defCount=1;
+                }else{
+                    defCount--;
+                }
+                Oem.innerHTML=defCount;
+
+               lastCount();
+            };
+            //产品购买月数选择
+            for(var i=0 ;i<select_btn.length;i++){
+                select_btn[i].index=i;
+                select_btn[i].onclick=function(){
+                    for(var i=0;i<select_btn.length;i++){
+                        select_btn[i].className="product_btn";
+                    }
+                    defCount=1;
+                    Oem.innerHTML=defCount;
+                    this.className+=' active';
+
+                    Oprice.innerHTML=arrPrice[this.index]+'元';
+
+                    lastCount();
+                }
+            }
+        }
+
+
+        //产品选择
+        for(var i=0;i<arrRadio.length;i++){
+            arrRadio[i].index=i;
+
+            arrRadio[i].onclick=function(){
+                bigPric=aLi[this.index].getElementsByClassName('price')[0];
+                bigOem=aLi[this.index].getElementsByTagName('em')[0];
+                lastCount();
+            }
+        }
+
+        //价格总计
+        function lastCount(){
+
+            for(var i=0;i<arrRadio.length;i++) {
+                if (arrRadio[i].checked  ) {
+
+                    Ocount.innerHTML = parseInt(bigPric.innerHTML) * parseInt(bigOem.innerHTML) +" 元";
+                }
+            }
+        }
+       //结算
+        bigBtn.onclick=function(){
+            if(parseInt( Ocount.innerHTML) != 0){
+                alert("提交成功");
+            }else{
+                alert("未选择产品");
+            }
+        }
+
+
+
+
+    </script>
+</body>
+</html>
